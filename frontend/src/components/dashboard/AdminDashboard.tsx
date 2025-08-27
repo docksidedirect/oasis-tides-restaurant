@@ -20,21 +20,33 @@ interface Reservation {
 }
 
 interface DashboardStats {
-  totalUsers: number;
-  totalOrders: number;
-  totalReservations: number;
-  totalRevenue: number;
-  recentOrders: Order[];
-  recentReservations: Reservation[];
+  totalUsers?: number;
+  totalOrders?: number;
+  totalReservations?: number;
+  totalRevenue?: number;
+  recentOrders?: Order[];
+  recentReservations?: Reservation[];
 }
 
 interface AdminDashboardProps {
   data?: DashboardStats | null;
 }
 
+// Safe formatting utilities
+const formatCurrency = (value?: number): string => {
+  if (value === undefined || value === null) return "$0";
+  return `$${value.toLocaleString()}`;
+};
+
+const formatNumber = (value?: number): string => {
+  if (value === undefined || value === null) return "0";
+  return value.toLocaleString();
+};
+
 export default function AdminDashboard({ data }: AdminDashboardProps) {
   const [stats, setStats] = useState<DashboardStats | null>(data || null);
   const [loading, setLoading] = useState(!data);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!data) {
@@ -44,28 +56,47 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
 
   const fetchDashboardData = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await dashboardAPI.adminDashboard();
-      setStats(response.data);
-    } catch (error) {
-      console.error("Failed to fetch dashboard data:", error);
-      // Provide fallback or empty data
-      setStats({
-        totalUsers: 0,
-        totalOrders: 0,
-        totalReservations: 0,
-        totalRevenue: 0,
-        recentOrders: [],
-        recentReservations: [],
-      });
+      console.log("Dashboard data response:", response);
+      setStats(response.data || null);
+    } catch (error: any) {
+      console.error("Failed to fetch dashboard data:", error.response || error);
+      setError(error.message || "Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Safe access to stats with fallbacks
+  const safeStats = {
+    totalUsers: stats?.totalUsers ?? 0,
+    totalOrders: stats?.totalOrders ?? 0,
+    totalReservations: stats?.totalReservations ?? 0,
+    totalRevenue: stats?.totalRevenue ?? 0,
+    recentOrders: stats?.recentOrders || [],
+    recentReservations: stats?.recentReservations || [],
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ocean-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-600 py-10">
+        <p>Error: {error}</p>
+        <button
+          onClick={fetchDashboardData}
+          className="mt-4 px-4 py-2 bg-ocean-600 text-white rounded hover:bg-ocean-700"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -88,7 +119,7 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
           iconBg="bg-blue-100"
           iconText="text-blue-600"
           title="Total Users"
-          value={stats.totalUsers}
+          value={formatNumber(safeStats.totalUsers)}
         />
         {/* Total Orders */}
         <StatCard
@@ -96,7 +127,7 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
           iconBg="bg-green-100"
           iconText="text-green-600"
           title="Total Orders"
-          value={stats.totalOrders}
+          value={formatNumber(safeStats.totalOrders)}
         />
         {/* Total Reservations */}
         <StatCard
@@ -104,7 +135,7 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
           iconBg="bg-yellow-100"
           iconText="text-yellow-600"
           title="Reservations"
-          value={stats.totalReservations}
+          value={formatNumber(safeStats.totalReservations)}
         />
         {/* Revenue */}
         <StatCard
@@ -112,7 +143,7 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
           iconBg="bg-purple-100"
           iconText="text-purple-600"
           title="Revenue"
-          value={`$${stats.totalRevenue.toLocaleString()}`}
+          value={formatCurrency(safeStats.totalRevenue)}
         />
       </div>
 
@@ -146,14 +177,14 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentList
           title="Recent Orders"
-          items={stats.recentOrders}
+          items={safeStats.recentOrders}
           renderItem={(order) => (
             <ActivityItem
               key={order.id}
               title={`Order #${order.id}`}
               subtitle={`Customer: ${order.customerName || "N/A"}`}
-              value={`$${order.totalAmount.toFixed(2)}`}
-              status={order.status}
+              value={`$${(order.totalAmount || 0).toFixed(2)}`}
+              status={order.status || "Unknown"}
               valueColor="text-green-600"
             />
           )}
@@ -162,14 +193,14 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
 
         <RecentList
           title="Recent Reservations"
-          items={stats.recentReservations}
+          items={safeStats.recentReservations}
           renderItem={(reservation) => (
             <ActivityItem
               key={reservation.id}
               title={`Table ${reservation.tableNumber ?? "N/A"}`}
               subtitle={`Guest: ${reservation.guestName || "N/A"}`}
               value={reservation.time || "TBD"}
-              status={reservation.status}
+              status={reservation.status || "Unknown"}
               valueColor="text-blue-600"
             />
           )}
@@ -191,7 +222,7 @@ function StatCard({
   iconBg: string;
   iconText: string;
   title: string;
-  value: number | string;
+  value: string; // Changed to string since we format now
 }) {
   return (
     <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -252,7 +283,7 @@ function RecentList<T>({
           {title}
         </h3>
         <div className="space-y-3">
-          {items.length ? (
+          {items && items.length > 0 ? (
             items.map(renderItem)
           ) : (
             <p className="text-gray-500">{emptyMessage}</p>

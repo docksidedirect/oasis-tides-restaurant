@@ -1,12 +1,13 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { orderAPI } from "@/lib/api";
 
 export default function CartPage() {
   const { cartItems, updateQuantity, removeItem, clearCart, getTotal } =
     useCart();
+
   const [orderType, setOrderType] = useState<
     "dine_in" | "takeaway" | "delivery"
   >("dine_in");
@@ -15,6 +16,14 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null; // Prevent hydration mismatch by rendering nothing on server/initial hydrate
 
   const handleSubmitOrder = async () => {
     if (cartItems.length === 0) {
@@ -42,9 +51,10 @@ export default function CartPage() {
         notes,
       };
 
-      await orderAPI.create(orderPayload);
+      await orderAPI.create(orderPayload); // Your actual API call to place order
+
       setSuccessMsg("Order successfully placed!");
-      clearCart();
+      clearCart(); // Clear cart on success
       setDeliveryAddress("");
       setNotes("");
     } catch (error) {
@@ -80,6 +90,7 @@ export default function CartPage() {
                     onChange={(e) =>
                       updateQuantity(item.id, Number(e.target.value))
                     }
+                    aria-label={`Quantity for ${item.name}`}
                   />
                   <button
                     onClick={() => removeItem(item.id)}
@@ -101,7 +112,11 @@ export default function CartPage() {
             <label className="block mb-1 font-medium">Order Type</label>
             <select
               value={orderType}
-              onChange={(e) => setOrderType(e.target.value as any)}
+              onChange={(e) =>
+                setOrderType(
+                  e.target.value as "dine_in" | "takeaway" | "delivery"
+                )
+              }
               className="border rounded px-3 py-2 w-full max-w-xs"
             >
               <option value="dine_in">Dine In</option>

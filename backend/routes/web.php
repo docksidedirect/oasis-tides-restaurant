@@ -6,6 +6,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AdminDashboardController;
+// use App\Http\Controllers\CartController; // Uncomment if CartController is implementedF
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::middleware('auth:sanctum')->get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
 
 
 // CartController if implemented

@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       await login(email, password);
-      router.push('/dashboard');
+      router.push("/dashboard"); // Redirect after successful login
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -37,7 +37,9 @@ export default function LoginPage() {
             <span className="text-white text-3xl">🌊</span>
           </div>
           <h2 className="text-3xl font-bold text-ocean-900">Welcome Back</h2>
-          <p className="mt-2 text-gray-600">Sign in to your Oasis Tides account</p>
+          <p className="mt-2 text-gray-600">
+            Sign in to your Oasis Tides account
+          </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -49,7 +51,10 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email Address
               </label>
               <input
@@ -66,7 +71,10 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -91,13 +99,19 @@ export default function LoginPage() {
                 type="checkbox"
                 className="h-4 w-4 text-ocean-600 focus:ring-ocean-500 border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-700"
+              >
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <Link href="/auth/forgot-password" className="text-ocean-600 hover:text-ocean-500">
+              <Link
+                href="/auth/forgot-password"
+                className="text-ocean-600 hover:text-ocean-500"
+              >
                 Forgot your password?
               </Link>
             </div>
@@ -114,37 +128,23 @@ export default function LoginPage() {
                 Signing in...
               </div>
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </button>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link href="/auth/register" className="text-ocean-600 hover:text-ocean-500 font-medium">
+              Don't have an account?{" "}
+              <Link
+                href="/auth/register"
+                className="text-ocean-600 hover:text-ocean-500 font-medium"
+              >
                 Sign up here
               </Link>
             </p>
           </div>
         </form>
-
-        {/* Demo Accounts */}
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Demo Accounts:</h3>
-          <div className="space-y-2 text-xs text-gray-600">
-            <div>
-              <strong>Admin:</strong> admin@oasistides.com / admin123
-            </div>
-            <div>
-              <strong>Staff:</strong> staff@oasistides.com / staff123
-            </div>
-            <div>
-              <strong>Client:</strong> client@oasistides.com / client123
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
 }
-

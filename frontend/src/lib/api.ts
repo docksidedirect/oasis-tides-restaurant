@@ -1,20 +1,27 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+/**
+ * API Base URL
+ */
+const API_BASE_URL: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
 
-// Create axios instance
-const api = axios.create({
-  baseURL: API_BASE_URL,
+/**
+ * Axios Instance
+ */
+const api: AxiosInstance = axios.create({
+  baseURL: '' + API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
 });
 
-// Request interceptor to add auth token
+/**
+ * Request Interceptor → Add Auth Token
+ */
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,11 +30,13 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle auth errors
+/**
+ * Response Interceptor → Handle 401 Unauthorized
+ */
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
       window.location.href = '/auth/login';
@@ -36,11 +45,10 @@ api.interceptors.response.use(
   }
 );
 
-// ------------------------------
-// TypeScript interfaces
-// ------------------------------
-
-interface RegisterData {
+/**
+ * ------- Types -------
+ */
+export interface AuthRegisterPayload {
   name: string;
   email: string;
   password: string;
@@ -49,111 +57,128 @@ interface RegisterData {
   address?: string;
 }
 
-interface LoginData {
+export interface AuthLoginPayload {
   email: string;
   password: string;
 }
 
-interface MenuItemData {
+export interface MenuItem {
+  id?: number;
   name: string;
-  description?: string;
   price: number;
-  category?: string;
+  category: string;
+  description?: string;
   image_url?: string;
-  is_available?: boolean;
-  is_featured?: boolean;
 }
 
-interface ReservationCreateData {
+export interface Reservation {
+  id?: number;
   name: string;
   phone: string;
   email?: string;
-  reservation_date: string; // YYYY-MM-DD
-  reservation_time: string; // HH:mm
+  reservation_date: string;
+  reservation_time: string;
   party_size: number;
-  special_requests?: string;
-}
-
-interface ReservationUpdateData {
-  name?: string;
-  phone?: string;
-  email?: string;
-  reservation_date?: string;
-  reservation_time?: string;
-  party_size?: number;
   special_requests?: string;
   status?: string;
 }
 
-interface OrderItemData {
+export interface OrderItem {
   menu_item_id: number;
   quantity: number;
-  customizations?: unknown; // Define more exactly if known
+  customizations?: Record<string, unknown>;
   special_instructions?: string;
 }
 
-interface OrderCreateData {
-  items: OrderItemData[];
+export interface Order {
+  id?: number;
+  items: OrderItem[];
   order_type: 'dine_in' | 'takeaway' | 'delivery';
   delivery_address?: string;
   notes?: string;
-}
-
-interface OrderUpdateData {
   status?: string;
-  delivery_address?: string;
-  notes?: string;
-  // Add other fields as needed
 }
 
-// ------------------------------
-// API function groups
-// ------------------------------
-
+/**
+ * ------- Auth API -------
+ */
 export const authAPI = {
-  register: (data: RegisterData) => api.post('/register', data),
-
-  login: (data: LoginData) => api.post('/login', data),
-
-  logout: () => api.post('/logout'),
-
-  me: () => api.get('/me'),
+  register: (data: AuthRegisterPayload): Promise<AxiosResponse> => api.post('/register', data),
+  login: (data: AuthLoginPayload): Promise<AxiosResponse> => api.post('/login', data),
+  logout: (): Promise<AxiosResponse> => api.post('/logout'),
+  me: (): Promise<AxiosResponse> => api.get('/me'),
 };
 
+/**
+ * ------- Menu API -------
+ */
 export const menuAPI = {
-  getAll: () => api.get('/menu'),
-  getById: (id: number) => api.get(`/menu/${id}`),
-  getByCategory: (category: string) => api.get(`/menu/category/${category}`),
-  create: (data: MenuItemData) => api.post('/menu', data),
-  update: (id: number, data: MenuItemData) => api.put(`/menu/${id}`, data),
-  delete: (id: number) => api.delete(`/menu/${id}`),
+  
+  getAll: (): Promise<AxiosResponse<{ menu_items: MenuItem[] }>> => api.get('/menu'),
+  getById: (id: number): Promise<AxiosResponse<MenuItem>> => api.get(`/menu/${id}`),
+  getByCategory: (category: string): Promise<AxiosResponse<MenuItem[]>> =>
+    api.get(`/menu/category/${category}`),
+  create: (data: MenuItem): Promise<AxiosResponse<MenuItem>> => api.post('/menu', data),
+  update: (id: number, data: Partial<MenuItem>): Promise<AxiosResponse<MenuItem>> =>
+    api.put(`/menu/${id}`, data),
+  delete: (id: number): Promise<AxiosResponse<void>> => api.delete(`/menu/${id}`),
 };
 
+/**
+ * ------- Reservation API -------
+ */
 export const reservationAPI = {
-  getAll: () => api.get('/reservations'),
-  getById: (id: number) => api.get(`/reservations/${id}`),
-  create: (data: ReservationCreateData) => api.post('/reservations', data),
-  update: (id: number, data: ReservationUpdateData) => api.put(`/reservations/${id}`, data),
-  delete: (id: number) => api.delete(`/reservations/${id}`),
-  updateStatus: (id: number, status: string) => api.put(`/reservations/${id}/status`, { status }),
-  adminGetAll: () => api.get('/admin/reservations'),
+  getAll: (): Promise<AxiosResponse<Reservation[]>> => api.get('/reservations'),
+  getById: (id: number): Promise<AxiosResponse<Reservation>> => api.get(`/reservations/${id}`),
+  create: (data: Reservation): Promise<AxiosResponse<Reservation>> => api.post('/reservations', data),
+  update: (id: number, data: Partial<Reservation>): Promise<AxiosResponse<Reservation>> =>
+    api.put(`/reservations/${id}`, data),
+  delete: (id: number): Promise<AxiosResponse<void>> => api.delete(`/reservations/${id}`),
+  updateStatus: (id: number, status: string): Promise<AxiosResponse<Reservation>> =>
+    api.put(`/reservations/${id}/status`, { status }),
+  adminGetAll: (): Promise<AxiosResponse<Reservation[]>> => api.get('/admin/reservations'),
 };
 
+/**
+ * ------- Order API -------
+ */
 export const orderAPI = {
-  getAll: () => api.get('/orders'),
-  getById: (id: number) => api.get(`/orders/${id}`),
-  create: (data: OrderCreateData) => api.post('/orders', data),
-  update: (id: number, data: OrderUpdateData) => api.put(`/orders/${id}`, data),
-  delete: (id: number) => api.delete(`/orders/${id}`),
-  updateStatus: (id: number, status: string) => api.put(`/orders/${id}/status`, { status }),
-  adminGetAll: () => api.get('/admin/orders'),
+  getAll: (): Promise<AxiosResponse<Order[]>> => api.get('/orders'),
+  getById: (id: number): Promise<AxiosResponse<Order>> => api.get(`/orders/${id}`),
+  create: (data: Order): Promise<AxiosResponse<Order>> => api.post('/orders', data),
+  update: (id: number, data: Partial<Order>): Promise<AxiosResponse<Order>> =>
+    api.put(`/orders/${id}`, data),
+  delete: (id: number): Promise<AxiosResponse<void>> => api.delete(`/orders/${id}`),
+  updateStatus: (id: number, status: string): Promise<AxiosResponse<Order>> =>
+    api.put(`/orders/${id}/status`, { status }),
+  adminGetAll: (): Promise<AxiosResponse<Order[]>> => api.get('/admin/orders'),
 };
 
+/**
+ * ------- Dashboard API -------
+ */
 export const dashboardAPI = {
-  getStats: () => api.get('/dashboard/stats'),
-  adminDashboard: () => api.get('/admin/dashboard'),
-  staffDashboard: () => api.get('/staff/dashboard'),
-  getUsers: () => api.get('/admin/users'),
+  getStats: (): Promise<AxiosResponse> => api.get('/dashboard/stats'),
+  adminDashboard: (): Promise<AxiosResponse> => api.get('/admin/dashboard'),
+  staffDashboard: (): Promise<AxiosResponse> => api.get('/staff/dashboard'),
+  getUsers: (): Promise<AxiosResponse> => api.get('/admin/users'),
+};
+
+/**
+ * ------- Blog API -------
+ */
+export const blogAPI = {
+  async getPosts(page = 1, pageSize = 10) {
+    const response = await api.get(`/blog/posts`, {
+      params: { page, pageSize },
+    });
+    return response.data; // Expect shape: { posts: BlogPost[], total: number }
+  },
+
+  async getPostBySlug(slug: string) {
+    const response = await api.get(`/blog/posts/${slug}`);
+    return response.data; // Expect BlogPost object
+  },
 };
 
 export default api;

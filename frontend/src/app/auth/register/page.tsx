@@ -1,26 +1,29 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-    phone: '',
-    address: '',
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    phone: "",
+    address: "",
   });
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   const { register } = useAuth();
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -30,19 +33,28 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     if (formData.password !== formData.password_confirmation) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
     try {
       await register(formData);
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message);
+      // Improved error handling to parse Laravel validation errors
+      if (err.response?.status === 422 && err.response?.data?.errors) {
+        const validationErrors = err.response.data.errors;
+        const messages = Object.values(validationErrors).flat().join(", ");
+        setError(messages);
+      } else if (err.message) {
+        setError(err.message);
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -55,8 +67,12 @@ export default function RegisterPage() {
           <div className="mx-auto w-20 h-20 bg-gradient-to-br from-ocean-500 to-primary-500 rounded-full flex items-center justify-center mb-6">
             <span className="text-white text-3xl">🌊</span>
           </div>
-          <h2 className="text-3xl font-bold text-ocean-900">Join Oasis Tides</h2>
-          <p className="mt-2 text-gray-600">Create your account to start dining with us</p>
+          <h2 className="text-3xl font-bold text-ocean-900">
+            Join Oasis Tides
+          </h2>
+          <p className="mt-2 text-gray-600">
+            Create your account to start dining with us
+          </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -68,7 +84,10 @@ export default function RegisterPage() {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Full Name *
               </label>
               <input
@@ -84,7 +103,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email Address *
               </label>
               <input
@@ -101,7 +123,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Phone Number
               </label>
               <input
@@ -116,7 +141,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Address
               </label>
               <textarea
@@ -131,7 +159,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password *
               </label>
               <input
@@ -148,7 +179,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password_confirmation"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Confirm Password *
               </label>
               <input
@@ -174,12 +208,18 @@ export default function RegisterPage() {
               className="h-4 w-4 text-ocean-600 focus:ring-ocean-500 border-gray-300 rounded"
             />
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              I agree to the{' '}
-              <Link href="/terms" className="text-ocean-600 hover:text-ocean-500">
+              I agree to the{" "}
+              <Link
+                href="/terms"
+                className="text-ocean-600 hover:text-ocean-500"
+              >
                 Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link href="/privacy" className="text-ocean-600 hover:text-ocean-500">
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/privacy"
+                className="text-ocean-600 hover:text-ocean-500"
+              >
                 Privacy Policy
               </Link>
             </label>
@@ -196,14 +236,17 @@ export default function RegisterPage() {
                 Creating account...
               </div>
             ) : (
-              'Create Account'
+              "Create Account"
             )}
           </button>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link href="/auth/login" className="text-ocean-600 hover:text-ocean-500 font-medium">
+              Already have an account?{" "}
+              <Link
+                href="/auth/login"
+                className="text-ocean-600 hover:text-ocean-500 font-medium"
+              >
                 Sign in here
               </Link>
             </p>
@@ -213,4 +256,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-

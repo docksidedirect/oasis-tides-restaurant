@@ -1,161 +1,248 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { menuAPI } from "@/lib/api";
+import { useState } from "react";
+import Link from "next/link";
+import { useCart } from "@/contexts/CartContext"; // Import cart context
 
 interface MenuItem {
   id: number;
   name: string;
-  description?: string;
+  description: string;
   price: number;
-  category?: string;
-  image_url?: string;
-  is_available: boolean;
-  is_featured?: boolean;
+  category: string;
+  image: string;
+  popular?: boolean;
 }
+
+const menuItems: MenuItem[] = [
+  // Appetizers
+  {
+    id: 1,
+    name: "Tuna Tartare",
+    description:
+      "Fresh yellowfin tuna with avocado, cucumber, and citrus dressing",
+    price: 22.99,
+    category: "appetizers",
+    image: "🍣",
+    popular: true,
+  },
+  {
+    id: 2,
+    name: "Lobster Bisque",
+    description: "Rich and creamy soup with fresh lobster meat and herbs",
+    price: 16.99,
+    category: "appetizers",
+    image: "🦞",
+  },
+  // Main Courses
+  {
+    id: 5,
+    name: "Grilled Salmon",
+    description:
+      "Atlantic salmon with herb crust, served with seasonal vegetables",
+    price: 28.99,
+    category: "mains",
+    image: "🐟",
+    popular: true,
+  },
+  {
+    id: 8,
+    name: "Ocean Platter",
+    description:
+      "Mixed seafood platter for two with lobster, shrimp, and scallops",
+    price: 65.99,
+    category: "mains",
+    image: "🍽️",
+    popular: true,
+  },
+  // Desserts
+  {
+    id: 10,
+    name: "Chocolate Lava Cake",
+    description: "Warm chocolate cake with molten center and vanilla ice cream",
+    price: 12.99,
+    category: "desserts",
+    image: "🍰",
+  },
+  // Beverages
+  {
+    id: 13,
+    name: "Ocean Breeze",
+    description: "Signature cocktail with blue curaçao and tropical fruits",
+    price: 14.99,
+    category: "beverages",
+    image: "🍹",
+  },
+];
+
+const categories = [
+  { id: "all", name: "All Items", icon: "🍽️" },
+  { id: "appetizers", name: "Appetizers", icon: "🍤" },
+  { id: "mains", name: "Main Courses", icon: "🐟" },
+  { id: "desserts", name: "Desserts", icon: "🍰" },
+  { id: "beverages", name: "Beverages", icon: "🍹" },
+];
 
 export default function MenuPage() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [filteredItems, setFilteredItems] = useState<MenuItem[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  useEffect(() => {
-    fetchMenuItems();
-  }, []);
+  const { cartItems, addToCart } = useCart(); // Use global cart context
 
-  useEffect(() => {
-    filterMenuItems();
-  }, [selectedCategory, menuItems]);
+  // Filter menu items based on selected category
+  const filteredItems =
+    selectedCategory === "all"
+      ? menuItems
+      : menuItems.filter((item) => item.category === selectedCategory);
 
-  const fetchMenuItems = async () => {
-    setLoading(true);
-    try {
-      const res = await menuAPI.getAll();
-      const items: MenuItem[] = res.data;
+  // Get cart count from global context
+  const getCartCount = () =>
+    cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-      setMenuItems(items);
-
-      // Extract unique categories plus 'All'
-      const uniqueCategories = Array.from(
-        new Set(items.map((item) => item.category || "Uncategorized"))
-      );
-      setCategories(["All", ...uniqueCategories]);
-
-      setError("");
-    } catch (err) {
-      setError("Failed to load menu items.");
-    } finally {
-      setLoading(false);
+  // Add item by finding menu item and passing full item info
+  const handleAddToCart = (itemId: number) => {
+    const item = menuItems.find((i) => i.id === itemId);
+    if (item) {
+      addToCart({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+      });
     }
   };
 
-  const filterMenuItems = () => {
-    if (selectedCategory === "All") {
-      setFilteredItems(menuItems);
-    } else {
-      setFilteredItems(
-        menuItems.filter(
-          (item) => (item.category || "Uncategorized") === selectedCategory
-        )
-      );
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ocean-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-600">
-        {error}
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Menu</h1>
-
-      {/* Category Filter */}
-      <div className="flex space-x-3 overflow-x-auto mb-6">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-4 py-2 rounded-full border transition ${
-              selectedCategory === category
-                ? "bg-ocean-600 text-white border-ocean-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-ocean-100"
-            } whitespace-nowrap`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredItems.map((item) => (
-          <MenuItemCard key={item.id} item={item} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// MenuItemCard Component
-function MenuItemCard({ item }: { item: MenuItem }) {
-  return (
-    <div className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
-      {item.image_url ? (
-        <img
-          src={item.image_url}
-          alt={item.name}
-          className="w-full h-48 object-cover"
-        />
-      ) : (
-        <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-          No Image
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="ocean-gradient text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-5xl font-bold mb-4 font-serif">Our Menu</h1>
+          <p className="text-xl opacity-90">
+            Fresh from the ocean to your table
+          </p>
         </div>
-      )}
+      </div>
 
-      <div className="p-4 flex flex-col flex-grow">
-        <h2 className="text-lg font-semibold">{item.name}</h2>
-        <p className="text-gray-600 flex-grow mt-2">
-          {item.description || "No description."}
-        </p>
-
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xl font-bold">${item.price.toFixed(2)}</span>
-          {item.is_available ? (
-            <span className="text-green-600 font-medium">Available</span>
-          ) : (
-            <span className="text-red-600 font-medium">Unavailable</span>
-          )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`flex items-center space-x-2 px-6 py-3 rounded-full transition-all ${
+                selectedCategory === category.id
+                  ? "bg-ocean-600 text-white shadow-lg"
+                  : "bg-white text-gray-700 hover:bg-ocean-50 shadow-md"
+              }`}
+            >
+              <span className="text-xl">{category.icon}</span>
+              <span className="font-medium">{category.name}</span>
+            </button>
+          ))}
         </div>
 
-        <button
-          disabled={!item.is_available}
-          className={`mt-4 w-full py-2 rounded ${
-            item.is_available
-              ? "bg-ocean-600 text-white hover:bg-ocean-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          } transition`}
-          onClick={() =>
-            alert(`Add "${item.name}" to cart (functionality coming soon)`)
-          }
-          aria-disabled={!item.is_available}
-        >
-          Add to Cart
-        </button>
+        {/* Cart Summary */}
+        {getCartCount() > 0 && (
+          <div className="fixed bottom-6 right-6 z-50">
+            <Link
+              href="/cart"
+              className="bg-ocean-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-ocean-700 transition-all flex items-center space-x-2"
+            >
+              <span>🛒</span>
+              <span className="font-medium">{getCartCount()} items</span>
+            </Link>
+          </div>
+        )}
+
+        {/* Menu Items Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredItems.map((item) => (
+            <div
+              key={item.id}
+              className="card overflow-hidden hover:shadow-xl transition-all"
+            >
+              {item.popular && (
+                <div className="bg-ocean-600 text-white px-3 py-1 text-sm font-medium inline-block">
+                  ⭐ Popular
+                </div>
+              )}
+
+              <div className="h-48 bg-gradient-to-br from-ocean-100 to-primary-100 flex items-center justify-center">
+                <span className="text-6xl">{item.image}</span>
+              </div>
+
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {item.name}
+                  </h3>
+                  <span className="text-2xl font-bold text-ocean-600">
+                    ${item.price}
+                  </span>
+                </div>
+
+                <p className="text-gray-600 mb-4 leading-relaxed">
+                  {item.description}
+                </p>
+
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => handleAddToCart(item.id)}
+                    className="btn btn-primary flex-1 mr-3"
+                  >
+                    Add to Cart
+                  </button>
+
+                  {cartItems.find((ci) => ci.id === item.id) && (
+                    <div className="bg-ocean-100 text-ocean-800 px-3 py-2 rounded-lg font-medium">
+                      {cartItems.find((ci) => ci.id === item.id)?.quantity} in
+                      cart
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filteredItems.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🍽️</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              No items found
+            </h3>
+            <p className="text-gray-600">Try selecting a different category</p>
+          </div>
+        )}
+
+        {/* Call to Action */}
+        <div className="mt-16 text-center">
+          <div className="bg-white rounded-xl p-8 shadow-lg">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 font-serif">
+              Ready to Order?
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Make a reservation to enjoy our fresh seafood in our beautiful
+              oceanfront setting
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/reservations"
+                className="btn btn-primary text-lg px-8 py-4"
+              >
+                Make Reservation
+              </Link>
+              <Link
+                href="/cart"
+                className="btn btn-secondary text-lg px-8 py-4"
+              >
+                View Cart ({getCartCount()})
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

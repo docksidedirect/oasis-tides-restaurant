@@ -1,0 +1,135 @@
+[
+  {
+    "name": "Classic Margherita Pizza",
+    "price": 12.99,
+    "category": "Pizza",
+    "description": "Fresh tomatoes, mozzarella cheese, basil, and olive oil on a classic crust.",
+    "image_url": "/images/pizza-margherita.jpg"
+  },
+  {
+    "name": "Pepperoni Pizza",
+    "price": 15.99,
+    "category": "Pizza",
+    "description": "Spicy pepperoni slices topped with mozzarella and tomato sauce.",
+    "image_url": "/images/pizza-pepperoni.jpg"
+  },
+  {
+    "name": "BBQ Chicken Pizza",
+    "price": 17.5,
+    "category": "Pizza",
+    "description": "Grilled chicken, BBQ sauce, red onions, and cheddar cheese.",
+    "image_url": "/images/pizza-bbq-chicken.jpg"
+  },
+  {
+    "name": "Veggie Supreme Pizza",
+    "price": 16.0,
+    "category": "Pizza",
+    "description": "Bell peppers, onions, mushrooms, olives, and tomatoes on a tomato base.",
+    "image_url": "/images/pizza-veggie.jpg"
+  },
+  {
+    "name": "Caesar Salad",
+    "price": 8.5,
+    "category": "Salads",
+    "description": "Crisp romaine lettuce with Caesar dressing, parmesan, and croutons.",
+    "image_url": "/images/caesar-salad.jpg"
+  },
+  {
+    "name": "Greek Salad",
+    "price": 9.0,
+    "category": "Salads",
+    "description": "Mixed greens with feta cheese, olives, tomatoes, and cucumbers.",
+    "image_url": "/images/greek-salad.jpg"
+  },
+  {
+    "name": "Garden Salad",
+    "price": 7.5,
+    "category": "Salads",
+    "description": "Fresh seasonal greens with carrots, cucumbers, and vinaigrette.",
+    "image_url": "/images/garden-salad.jpg"
+  },
+  {
+    "name": "Grilled Salmon Fillet",
+    "price": 22.99,
+    "category": "Main Courses",
+    "description": "Fresh Atlantic salmon grilled to perfection with herbs and lemon.",
+    "image_url": "/images/grilled-salmon.jpg"
+  },
+  {
+    "name": "Ribeye Steak",
+    "price": 28.99,
+    "category": "Main Courses",
+    "description": "Juicy ribeye steak cooked to your liking, served with vegetables.",
+    "image_url": "/images/ribeye-steak.jpg"
+  },
+  {
+    "name": "Chicken Alfredo Pasta",
+    "price": 18.99,
+    "category": "Main Courses",
+    "description": "Creamy alfredo sauce tossed with fettuccine and grilled chicken.",
+    "image_url": "/images/chicken-alfredo.jpg"
+  },
+  {
+    "name": "Vegetable Stir Fry",
+    "price": 15.5,
+    "category": "Main Courses",
+    "description": "Mixed vegetables stir-fried in soy sauce with garlic and ginger.",
+    "image_url": "/images/veg-stir-fry.jpg"
+  },
+  {
+    "name": "Chocolate Lava Cake",
+    "price": 7.0,
+    "category": "Desserts",
+    "description": "Warm chocolate cake with a gooey chocolate center, served with vanilla ice cream.",
+    "image_url": "/images/chocolate-lava-cake.jpg"
+  },
+  {
+    "name": "Tiramisu",
+    "price": 6.5,
+    "category": "Desserts",
+    "description": "Classic Italian dessert with layers of espresso-soaked ladyfingers and mascarpone.",
+    "image_url": "/images/tiramisu.jpg"
+  },
+  {
+    "name": "Cheesecake",
+    "price": 6.99,
+    "category": "Desserts",
+    "description": "Rich and creamy cheesecake with a graham cracker crust.",
+    "image_url": "/images/cheesecake.jpg"
+  },
+  {
+    "name": "Lemon Sorbet",
+    "price": 5.0,
+    "category": "Desserts",
+    "description": "Refreshing lemon-flavored frozen dessert, perfect palate cleanser.",
+    "image_url": "/images/lemon-sorbet.jpg"
+  },
+  {
+    "name": "Espresso",
+    "price": 3.0,
+    "category": "Beverages",
+    "description": "Strong and rich espresso shot, prepared fresh.",
+    "image_url": "/images/espresso.jpg"
+  },
+  {
+    "name": "Herbal Tea",
+    "price": 2.5,
+    "category": "Beverages",
+    "description": "A selection of calming herbal teas.",
+    "image_url": "/images/herbal-tea.jpg"
+  },
+  {
+    "name": "Latte",
+    "price": 4.0,
+    "category": "Beverages",
+    "description": "Espresso mixed with steamed milk for a creamy texture.",
+    "image_url": "/images/latte.jpg"
+  },
+  {
+    "name": "Fresh Orange Juice",
+    "price": 4.5,
+    "category": "Beverages",
+    "description": "Freshly squeezed orange juice served chilled.",
+    "image_url": "/images/orange-juice.jpg"
+  }
+]

@@ -54,44 +54,70 @@ export default function StaffDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div
+        className="flex items-center justify-center h-64"
+        role="status"
+        aria-label="Loading staff dashboard"
+      >
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ocean-600"></div>
       </div>
     );
   }
 
+  // Provide safe defaults
+  const safeStats = {
+    pendingOrders: stats?.pendingOrders ?? 0,
+    activeReservations: stats?.activeReservations ?? 0,
+    completedToday: stats?.completedToday ?? 0,
+    recentOrders: stats?.recentOrders ?? [],
+    upcomingReservations: stats?.upcomingReservations ?? [],
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 sm:px-6 lg:px-8">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section
+        aria-label="Staff statistics"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
         <StatCard
           icon="⏰"
           color="red"
           title="Pending Orders"
-          value={stats?.pendingOrders || 0}
+          value={safeStats.pendingOrders}
         />
         <StatCard
           icon="📅"
           color="blue"
           title="Active Reservations"
-          value={stats?.activeReservations || 0}
+          value={safeStats.activeReservations}
         />
         <StatCard
           icon="✅"
           color="green"
           title="Completed Today"
-          value={stats?.completedToday || 0}
+          value={safeStats.completedToday}
         />
-      </div>
+      </section>
 
       {/* Quick Actions */}
-      <div className="bg-white shadow rounded-lg">
+      <section
+        aria-labelledby="quick-actions-heading"
+        className="bg-white shadow rounded-lg"
+      >
         <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+          <h2
+            id="quick-actions-heading"
+            className="text-lg font-medium text-gray-900 mb-4"
+          >
             Quick Actions
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button
+              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-ocean-500"
+              type="button"
+              aria-label="View Orders - manage pending and active orders"
+            >
               <span className="text-2xl mr-3">📋</span>
               <div className="text-left">
                 <div className="font-medium">View Orders</div>
@@ -101,7 +127,11 @@ export default function StaffDashboard() {
               </div>
             </button>
 
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button
+              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-ocean-500"
+              type="button"
+              aria-label="Reservations - check and update reservations"
+            >
               <span className="text-2xl mr-3">🏪</span>
               <div className="text-left">
                 <div className="font-medium">Reservations</div>
@@ -112,12 +142,14 @@ export default function StaffDashboard() {
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Current Tasks - Pending Orders */}
+      {/* Pending Orders */}
       <ActivitySection
         title="Pending Orders"
-        items={stats?.recentOrders.length ? stats.recentOrders : mockOrders}
+        items={
+          safeStats.recentOrders.length ? safeStats.recentOrders : mockOrders
+        }
         emptyMessage="No pending orders"
         renderItem={(order) => (
           <div
@@ -132,10 +164,10 @@ export default function StaffDashboard() {
               <div className="text-xs text-gray-400">{order.timeAgo}</div>
             </div>
             <div className="flex space-x-2">
-              <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+              <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                 Complete
               </button>
-              <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+              <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 View
               </button>
             </div>
@@ -143,12 +175,12 @@ export default function StaffDashboard() {
         )}
       />
 
-      {/* Current Tasks - Today's Reservations */}
+      {/* Today's Reservations */}
       <ActivitySection
         title="Today's Reservations"
         items={
-          stats?.upcomingReservations.length
-            ? stats.upcomingReservations
+          safeStats.upcomingReservations.length
+            ? safeStats.upcomingReservations
             : mockReservations
         }
         emptyMessage="No upcoming reservations"
@@ -165,10 +197,10 @@ export default function StaffDashboard() {
               </div>
             </div>
             <div className="flex space-x-2">
-              <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+              <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
                 Seated
               </button>
-              <button className="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">
+              <button className="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
                 Call
               </button>
             </div>
@@ -313,7 +345,7 @@ function SummaryCard({
   );
 }
 
-// Mock data to show if API data is empty
+// Mock data if API data is empty
 const mockOrders: Order[] = [
   { id: 1001, tableNumber: 3, timeAgo: "5 minutes ago", status: "Pending" },
   { id: 1002, tableNumber: 5, timeAgo: "10 minutes ago", status: "Pending" },

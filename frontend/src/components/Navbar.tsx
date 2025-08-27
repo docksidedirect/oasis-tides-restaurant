@@ -3,203 +3,202 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
+import CartCount from "@/components/CartCount";
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const { cartItems } = useCart();
+
+  // Calculate total items in cart
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <>
-      {/* Top Bar */}
-      <div className="bg-ocean-900 text-white py-2 px-4 text-sm">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex space-x-6">
-            <a
-              href="mailto:info@oasistides.com"
-              className="hover:text-ocean-300 transition-colors"
-            >
-              📧 info@oasistides.com
-            </a>
-            <a
-              href="tel:+1234567890"
-              className="hover:text-ocean-300 transition-colors"
-            >
-              📞 +1 (234) 567-8900
-            </a>
-          </div>
-          <div className="flex space-x-4" aria-label="Social media links">
-            <a
-              href="#"
-              className="hover:text-ocean-300 transition-colors"
-              aria-label="Facebook"
-            >
-              📘
-            </a>
-            <a
-              href="#"
-              className="hover:text-ocean-300 transition-colors"
-              aria-label="Twitter"
-            >
-              🐦
-            </a>
-            <a
-              href="#"
-              className="hover:text-ocean-300 transition-colors"
-              aria-label="Instagram"
-            >
-              📷
-            </a>
-            <a
-              href="#"
-              className="hover:text-ocean-300 transition-colors"
-              aria-label="LinkedIn"
-            >
-              💼
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navigation */}
-      <nav className="bg-white shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center py-4">
-            {/* Logo */}
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
+          <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-ocean-500 to-primary-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">🌊</span>
-              </div>
+              <span className="text-2xl">🌊</span>
               <div>
-                <h1 className="text-2xl font-bold text-ocean-900">
+                <span className="text-xl font-bold text-ocean-600 font-serif">
                   Oasis Tides
-                </h1>
-                <p className="text-xs text-gray-600">Fine Dining Restaurant</p>
+                </span>
+                <div className="text-xs text-gray-500">
+                  Fine Dining Restaurant
+                </div>
               </div>
             </Link>
-
-            {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {["/", "/about", "/menu", "/chefs", "/blog", "/contact"].map(
-                (href, idx) => {
-                  const label =
-                    href === "/"
-                      ? "Home"
-                      : href
-                          .slice(1)
-                          .replace(/-/g, " ")
-                          .replace(/\b\w/g, (c) => c.toUpperCase());
-                  return (
-                    <Link
-                      key={idx}
-                      href={href}
-                      className="text-gray-700 hover:text-ocean-600 font-medium transition-colors"
-                    >
-                      {label}
-                    </Link>
-                  );
-                }
-              )}
-            </div>
-
-            {/* Right Side Icons */}
-            <div className="hidden lg:flex items-center space-x-4">
-              <button
-                aria-label="Search"
-                className="text-gray-700 hover:text-ocean-600 transition-colors"
-              >
-                🔍
-              </button>
-              <button
-                aria-label="Cart"
-                className="relative text-gray-700 hover:text-ocean-600 transition-colors"
-              >
-                🛒
-                <span className="absolute -top-2 -right-2 bg-ocean-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  0
-                </span>
-              </button>
-              <Link
-                href="/dashboard"
-                className="text-gray-700 hover:text-ocean-600 transition-colors"
-                aria-label="User Dashboard"
-              >
-                👤
-              </Link>
-              <button className="bg-ocean-600 text-white px-6 py-2 rounded-full hover:bg-ocean-700 transition-colors font-medium">
-                Reservation
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-expanded={isOpen}
-              aria-label="Toggle menu"
-              className="lg:hidden text-gray-700 hover:text-ocean-600 transition-colors"
-            >
-              {isOpen ? "✕" : "☰"}
-            </button>
           </div>
 
-          {/* Mobile Menu */}
-          {isOpen && (
-            <div className="lg:hidden py-4 border-t">
-              <div className="flex flex-col space-y-4">
-                {["/", "/about", "/menu", "/chefs", "/blog", "/contact"].map(
-                  (href, idx) => {
-                    const label =
-                      href === "/"
-                        ? "Home"
-                        : href
-                            .slice(1)
-                            .replace(/-/g, " ")
-                            .replace(/\b\w/g, (c) => c.toUpperCase());
-                    return (
-                      <Link
-                        key={idx}
-                        href={href}
-                        className="text-gray-700 hover:text-ocean-600 font-medium transition-colors"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {label}
-                      </Link>
-                    );
-                  }
-                )}
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link
+              href="/"
+              className="text-gray-700 hover:text-ocean-600 transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className="text-gray-700 hover:text-ocean-600 transition-colors"
+            >
+              About
+            </Link>
+            <Link
+              href="/menu"
+              className="text-gray-700 hover:text-ocean-600 transition-colors"
+            >
+              Menu
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-700 hover:text-ocean-600 transition-colors"
+            >
+              Contact
+            </Link>
+          </div>
 
-                <div className="flex items-center space-x-4 pt-4">
-                  <button
-                    aria-label="Search"
-                    className="text-gray-700 hover:text-ocean-600 transition-colors"
-                  >
-                    🔍
-                  </button>
-                  <button
-                    aria-label="Cart"
-                    className="relative text-gray-700 hover:text-ocean-600 transition-colors"
-                  >
-                    🛒
-                    <span className="absolute -top-2 -right-2 bg-ocean-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      0
-                    </span>
-                  </button>
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-700 hover:text-ocean-600 transition-colors"
-                    aria-label="User Dashboard"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    👤
-                  </Link>
-                </div>
-                <button className="bg-ocean-600 text-white px-6 py-2 rounded-full hover:bg-ocean-700 transition-colors font-medium w-fit">
-                  Reservation
+          {/* Right side buttons */}
+          <div className="flex items-center space-x-4">
+            {/* Search */}
+            <button className="p-2 text-gray-600 hover:text-ocean-600 transition-colors">
+              🔍
+            </button>
+
+            {/* Cart with item count */}
+            <Link
+              href="/cart"
+              className="relative p-2 text-gray-600 hover:text-ocean-600 transition-colors"
+            >
+              🛒
+              {totalQuantity > 0 && (
+                <span className="absolute -top-1 -right-1 bg-ocean-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                  {totalQuantity}
+                </span>
+              )}
+            </Link>
+
+            {/* User Menu */}
+            {isAuthenticated ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-ocean-600 transition-colors"
+                >
+                  <span className="text-lg">👤</span>
+                  <span className="hidden sm:block">{user?.name}</span>
                 </button>
+
+                {isMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                    <Link
+                      href="/dashboard"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
+            ) : (
+              <Link
+                href="/auth/login"
+                className="flex items-center space-x-1 text-gray-700 hover:text-ocean-600 transition-colors"
+              >
+                <span className="text-lg">👤</span>
+                <span className="hidden sm:block">Login</span>
+              </Link>
+            )}
+
+            {/* Reservation Button */}
+            <Link
+              href="/reservations"
+              className="btn btn-primary hidden sm:inline-block px-4 py-2 transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
+            >
+              Reservation
+            </Link>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-gray-600 hover:text-ocean-600"
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+            >
+              ☰
+            </button>
+          </div>
         </div>
-      </nav>
-    </>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-gray-50 border-t border-gray-200">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <Link
+                href="/"
+                className="block px-3 py-2 text-gray-700 hover:text-ocean-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/about"
+                className="block px-3 py-2 text-gray-700 hover:text-ocean-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                href="/menu"
+                className="block px-3 py-2 text-gray-700 hover:text-ocean-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Menu
+              </Link>
+              <Link
+                href="/contact"
+                className="block px-3 py-2 text-gray-700 hover:text-ocean-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <Link
+                href="/reservations"
+                className="block px-3 py-2 mt-1 bg-ocean-600 text-white rounded text-center"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Reservation
+              </Link>
+              <Link
+                href="/cart"
+                className="block px-3 py-2 mt-1 relative text-gray-700 hover:text-ocean-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Cart
+                {totalQuantity > 0 && (
+                  <span className="absolute -top-1 right-4 bg-ocean-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                    {totalQuantity}
+                    
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
   );
 }

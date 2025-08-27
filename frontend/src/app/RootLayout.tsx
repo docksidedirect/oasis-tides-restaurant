@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
-import ClientDynamicWrapper from "@/components/ClientDynamicWrapper";
+import BodyClassInitializer from "@/components/BodyClassInitializer";
 
 export const metadata: Metadata = {
   title: "Oasis Tides - Fine Dining Restaurant",
@@ -19,15 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <BodyClassInitializer />
         <AuthProvider>
           <CartProvider>
-            <ClientDynamicWrapper>
-              <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <main className="flex-grow">{children}</main>
-                <Footer />
-              </div>
-            </ClientDynamicWrapper>
+            <Navbar />
+            {children}
+            <Footer />
           </CartProvider>
         </AuthProvider>
       </body>

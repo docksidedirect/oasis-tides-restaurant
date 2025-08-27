@@ -12,10 +12,13 @@ import ClientDashboard from "@/components/dashboard/ClientDashboard";
 type DashboardDataType = any; // Replace 'any' with your actual dashboard data type if available
 
 export default function DashboardPage() {
-  const { user, isAuthenticated, loading, isAdmin, isStaff, isClient } = useAuth();
+  const { user, isAuthenticated, loading, isAdmin, isStaff, isClient } =
+    useAuth();
   const router = useRouter();
 
-  const [dashboardData, setDashboardData] = useState<DashboardDataType | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardDataType | null>(
+    null
+  );
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
@@ -26,6 +29,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
+      const token = localStorage.getItem("auth_token");
+      console.log("Auth token:", token); // <-- check token here
+
       api
         .get("/dashboard")
         .then((res) => {
@@ -89,7 +95,9 @@ export default function DashboardPage() {
 
         {/* Role-specific Dashboard Content */}
         {isAdmin && dashboardData && <AdminDashboard data={dashboardData} />}
-        {isStaff && !isAdmin && dashboardData && <StaffDashboard data={dashboardData} />}
+        {isStaff && !isAdmin && dashboardData && (
+          <StaffDashboard data={dashboardData} />
+        )}
         {isClient && dashboardData && <ClientDashboard data={dashboardData} />}
       </div>
     </div>
