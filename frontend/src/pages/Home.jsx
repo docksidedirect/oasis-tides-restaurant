@@ -19,18 +19,18 @@ import { useState, useEffect } from "react";
 const carouselImages = [
   {
     src: "/images/slider_img_1.png",
-    title: "Seaside Grilled Salmon",
-    subtitle: "Fresh from the ocean to your plate",
+    title: "Fresh and Tasty",
+    subtitle: "",
   },
   {
     src: "/images/slider_img_2.png",
-    title: "Mediterranean Pasta",
-    subtitle: "Authentic flavors of the Mediterranean",
+    title: "Authentic flavors",
+    subtitle: " ",
   },
   {
     src: "/images/slider_img_3.png",
-    title: "Tropical Shrimp Skewers",
-    subtitle: "Exotic tastes from paradise",
+    title: "A Perfect Choice",
+    subtitle: "",
   },
 ];
 
@@ -201,11 +201,13 @@ const Home = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDark 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white' 
-        : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50 text-gray-900'
-    }`}>
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        isDark
+          ? "bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white"
+          : "bg-gradient-to-br from-blue-50 via-white to-cyan-50 text-gray-900"
+      }`}
+    >
       {/* Hero Section with Carousel */}
       <section className="relative flex flex-col lg:flex-row items-center justify-center px-8 py-16 md:py-24 max-w-7xl mx-auto gap-12">
         <div className="w-full lg:w-1/2 text-center lg:text-left">
@@ -218,11 +220,13 @@ const Home = () => {
             <span className="inline-block px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black text-sm font-semibold rounded-full mb-4">
               ✨ Premium Dining Experience
             </span>
-            <h1 className={`text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-gradient-to-r ${
-              isDark 
-                ? 'from-white via-gray-100 to-gray-300' 
-                : 'from-gray-900 via-gray-700 to-gray-600'
-            } bg-clip-text text-transparent`}>
+            <h1
+              className={`text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-gradient-to-r ${
+                isDark
+                  ? "from-white via-gray-100 to-gray-300"
+                  : "from-gray-900 via-gray-700 to-gray-600"
+              } bg-clip-text text-transparent`}
+            >
               {t("welcome")} to Oasis Tides
             </h1>
           </motion.div>
@@ -232,7 +236,7 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className={`text-lg md:text-2xl mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed ${
-              isDark ? 'text-gray-300' : 'text-gray-600'
+              isDark ? "text-gray-300" : "text-gray-600"
             }`}
           >
             Experience authentic dining with fresh seafood and exquisite cuisine
@@ -268,9 +272,9 @@ const Home = () => {
                   size="lg"
                   variant="outline"
                   className={`border-2 shadow-xl transition-all duration-300 font-semibold px-8 py-4 ${
-                    isDark 
-                      ? 'border-gray-400 text-white hover:bg-white hover:text-black' 
-                      : 'border-gray-600 text-gray-900 hover:bg-gray-900 hover:text-white'
+                    isDark
+                      ? "border-gray-400 text-white hover:bg-white hover:text-black"
+                      : "border-gray-600 text-gray-900 hover:bg-gray-900 hover:text-white"
                   }`}
                 >
                   Reserve Table
@@ -293,11 +297,13 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className={`py-20 transition-colors duration-300 ${
-        isDark 
-          ? 'bg-gradient-to-r from-gray-800 to-gray-900' 
-          : 'bg-gradient-to-r from-gray-100 to-gray-200'
-      }`}>
+      <section
+        className={`py-20 transition-colors duration-300 ${
+          isDark
+            ? "bg-gradient-to-r from-gray-800 to-gray-900"
+            : "bg-gradient-to-r from-gray-100 to-gray-200"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.div
@@ -309,16 +315,20 @@ const Home = () => {
               <span className="inline-block px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black text-sm font-semibold rounded-full mb-4">
                 Why Choose Us
               </span>
-              <h2 className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${
-                isDark 
-                  ? 'from-white to-gray-300' 
-                  : 'from-gray-900 to-gray-600'
-              } bg-clip-text text-transparent`}>
+              <h2
+                className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${
+                  isDark
+                    ? "from-white to-gray-300"
+                    : "from-gray-900 to-gray-600"
+                } bg-clip-text text-transparent`}
+              >
                 The Oasis Tides Difference
               </h2>
-              <p className={`text-xl max-w-3xl mx-auto leading-relaxed ${
-                isDark ? 'text-gray-300' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-xl max-w-3xl mx-auto leading-relaxed ${
+                  isDark ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
                 We pride ourselves on delivering exceptional dining experiences
                 with attention to every detail, creating moments that last a
                 lifetime.
@@ -339,24 +349,30 @@ const Home = () => {
                   y: -10,
                 }}
                 className={`text-center p-8 rounded-2xl shadow-2xl border transition-all duration-300 ${
-                  isDark 
-                    ? 'bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600 hover:border-gray-500' 
-                    : 'bg-gradient-to-br from-white to-gray-50 border-gray-200 hover:border-gray-300'
+                  isDark
+                    ? "bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600 hover:border-gray-500"
+                    : "bg-gradient-to-br from-white to-gray-50 border-gray-200 hover:border-gray-300"
                 }`}
               >
-                <div className={`flex justify-center mb-6 p-4 rounded-full w-20 h-20 mx-auto items-center ${
-                  isDark ? 'bg-gray-800' : 'bg-gray-100'
-                }`}>
+                <div
+                  className={`flex justify-center mb-6 p-4 rounded-full w-20 h-20 mx-auto items-center ${
+                    isDark ? "bg-gray-800" : "bg-gray-100"
+                  }`}
+                >
                   {feature.icon}
                 </div>
-                <h3 className={`text-2xl font-bold mb-4 ${
-                  isDark ? 'text-white' : 'text-gray-900'
-                }`}>
+                <h3
+                  className={`text-2xl font-bold mb-4 ${
+                    isDark ? "text-white" : "text-gray-900"
+                  }`}
+                >
                   {feature.title}
                 </h3>
-                <p className={`text-lg leading-relaxed ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
+                <p
+                  className={`text-lg leading-relaxed ${
+                    isDark ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
                   {feature.description}
                 </p>
               </motion.div>
@@ -366,11 +382,13 @@ const Home = () => {
       </section>
 
       {/* Products Section */}
-      <section className={`py-20 transition-colors duration-300 ${
-        isDark 
-          ? 'bg-gradient-to-br from-black via-gray-900 to-gray-800' 
-          : 'bg-gradient-to-br from-white via-gray-50 to-blue-50'
-      }`}>
+      <section
+        className={`py-20 transition-colors duration-300 ${
+          isDark
+            ? "bg-gradient-to-br from-black via-gray-900 to-gray-800"
+            : "bg-gradient-to-br from-white via-gray-50 to-blue-50"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.div
@@ -382,16 +400,20 @@ const Home = () => {
               <span className="inline-block px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-sm font-semibold rounded-full mb-4">
                 Signature Dishes
               </span>
-              <h2 className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${
-                isDark 
-                  ? 'from-white to-gray-300' 
-                  : 'from-gray-900 to-gray-600'
-              } bg-clip-text text-transparent`}>
+              <h2
+                className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${
+                  isDark
+                    ? "from-white to-gray-300"
+                    : "from-gray-900 to-gray-600"
+                } bg-clip-text text-transparent`}
+              >
                 Chef's Recommendations
               </h2>
-              <p className={`text-xl max-w-3xl mx-auto leading-relaxed ${
-                isDark ? 'text-gray-300' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-xl max-w-3xl mx-auto leading-relaxed ${
+                  isDark ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
                 Discover our most loved dishes crafted with passion, expertise,
                 and the finest ingredients from around the world.
               </p>
@@ -411,9 +433,9 @@ const Home = () => {
                   y: -5,
                 }}
                 className={`rounded-2xl shadow-2xl overflow-hidden border transition-all duration-300 ${
-                  isDark 
-                    ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700 hover:border-gray-600' 
-                    : 'bg-gradient-to-br from-white to-gray-50 border-gray-200 hover:border-gray-300'
+                  isDark
+                    ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700 hover:border-gray-600"
+                    : "bg-gradient-to-br from-white to-gray-50 border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <div className="relative h-64 w-full overflow-hidden">
@@ -431,14 +453,18 @@ const Home = () => {
                 </div>
 
                 <div className="p-6">
-                  <h3 className={`text-2xl font-bold mb-3 ${
-                    isDark ? 'text-white' : 'text-gray-900'
-                  }`}>
+                  <h3
+                    className={`text-2xl font-bold mb-3 ${
+                      isDark ? "text-white" : "text-gray-900"
+                    }`}
+                  >
                     {product.name}
                   </h3>
-                  <p className={`mb-6 leading-relaxed ${
-                    isDark ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
+                  <p
+                    className={`mb-6 leading-relaxed ${
+                      isDark ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
                     {product.description}
                   </p>
                   <div className="flex justify-between items-center">
@@ -525,5 +551,3 @@ const Home = () => {
 };
 
 export default Home;
-
-

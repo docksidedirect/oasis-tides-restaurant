@@ -9,6 +9,9 @@ import { Badge } from "../components/ui/badge";
 import { Star, Plus, ShoppingCart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Import your image (ensure menu.jpg is in public/images/)
+const menuBanner = "/images/counter_bg.jpg";
+
 const Menu = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -27,7 +30,6 @@ const Menu = () => {
     },
   });
 
-  // Category values must match backend exactly
   const categories = [
     { id: "all", name: "All Items", nameAr: "جميع الأصناف" },
     { id: "appetizer", name: "Appetizers", nameAr: "المقبلات" },
@@ -42,7 +44,11 @@ const Menu = () => {
     ) || [];
 
   const handleAddToCart = (item) => {
-    addToCart({ ...item, price: parseFloat(item.price) });
+    addToCart({
+      ...item,
+      price: parseFloat(item.price), // Keep this for price safety
+      image: item.image || "", // <-- MAKE SURE THIS IS PRESENT!
+    });
   };
 
   if (isLoading) {
@@ -71,28 +77,35 @@ const Menu = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white pb-16">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-12 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl font-extrabold bg-gradient-to-r from-white via-amber-100 to-amber-300 bg-clip-text text-transparent mb-4"
+      {/* Menu Banner (matches About styling) */}
+      <section
+        className="relative flex flex-col items-center justify-center py-10 md:py-14 mb-10"
+        style={{
+          backgroundImage: `url('${menuBanner}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          //borderRadius: "18px",
+          overflow: "hidden",
+        }}
+      >
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative z-10 w-full text-center flex flex-col items-center">
+          <h1
+            className="text-white text-4xl md:text-5xl font-extrabold mb-2"
+            style={{ textShadow: "0 2px 24px #222" }}
           >
-            {t("menuTitle")}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl max-w-3xl mx-auto text-amber-100 opacity-90"
+            Our Menu
+          </h1>
+          <p
+            className="text-white text-xl md:text-2xl mt-1"
+            style={{ textShadow: "0 2px 12px #333" }}
           >
             Discover our carefully crafted dishes made with the freshest
             ingredients and authentic flavors
-          </motion.p>
+          </p>
         </div>
-      </header>
+      </section>
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Category Filter */}
@@ -162,7 +175,7 @@ const Menu = () => {
         {/* Menu Items Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10"
         >
           <AnimatePresence>
             {filteredItems.map((item, index) => (

@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Calendar, Send } from "lucide-react";
 
+// Import your image (ensure menu.jpg is in public/images/)
+const contactBanner = "/images/counter_bg.jpg";
+
 const Contact = () => {
   const { t, language } = useLanguage();
   const { isDark } = useTheme();
@@ -33,7 +36,8 @@ const Contact = () => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    if (Math.random() > 0.1) { // 90% success rate
+    if (Math.random() > 0.1) {
+      // 90% success rate
       toast.success(t("messageSentSuccessfully"));
       setFormData({
         name: "",
@@ -68,42 +72,29 @@ const Contact = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen transition-colors duration-300 ${
-        isDark
-          ? "bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white"
-          : "bg-gradient-to-br from-blue-50 via-white to-gray-50 text-gray-900"
-      }`}
-    >
-      {/* Header */}
-      <header
-        className={`py-12 shadow-lg ${
-          isDark
-            ? "bg-gradient-to-r from-blue-800 via-cyan-800 to-teal-800"
-            : "bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600"
-        }`}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white pb-16">
+      {/* Menu Banner (matches About styling) */}
+      <section
+        className="relative flex flex-col items-center justify-center py-10 md:py-14 mb-10"
+        style={{
+          backgroundImage: `url('${contactBanner}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          //borderRadius: "18px",
+          overflow: "hidden",
+        }}
       >
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <motion.h1
-            className="text-5xl font-extrabold bg-gradient-to-r from-white via-blue-100 to-blue-300 bg-clip-text text-transparent mb-4"
-            variants={fadeInVariants}
-            initial="hidden"
-            animate="visible"
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative z-10 w-full text-center flex flex-col items-center">
+          <h1
+            className="text-white text-4xl md:text-5xl font-extrabold mb-2"
+            style={{ textShadow: "0 2px 24px #222" }}
           >
-            {t("contactUs")}
-          </motion.h1>
-          <motion.p
-            className={`text-lg md:text-xl max-w-3xl mx-auto opacity-90 ${
-              isDark ? "text-blue-200" : "text-blue-100"
-            }`}
-            variants={fadeInVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {t("contactSubtitle")}
-          </motion.p>
+            Contact
+          </h1>
         </div>
-      </header>
+      </section>
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -137,9 +128,11 @@ const Contact = () => {
                   >
                     {t("address")}
                   </h3>
-                  <p className={`text-sm ${
-                    isDark ? "text-gray-300" : "text-gray-600"
-                  }`}>
+                  <p
+                    className={`text-sm ${
+                      isDark ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
                     123 Ocean Drive
                     <br />
                     Seaside City, SC 29401
@@ -159,9 +152,11 @@ const Contact = () => {
                   >
                     {t("phone")}
                   </h3>
-                  <p className={`text-sm ${
-                    isDark ? "text-gray-300" : "text-gray-600"
-                  }`}>
+                  <p
+                    className={`text-sm ${
+                      isDark ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
                     +1 (555) 123-4567
                   </p>
                 </div>
@@ -177,9 +172,11 @@ const Contact = () => {
                   >
                     {t("email")}
                   </h3>
-                  <p className={`text-sm ${
-                    isDark ? "text-gray-300" : "text-gray-600"
-                  }`}>
+                  <p
+                    className={`text-sm ${
+                      isDark ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
                     info@oasistides.com
                   </p>
                 </div>
@@ -195,9 +192,11 @@ const Contact = () => {
                   >
                     {t("hours")}
                   </h3>
-                  <div className={`text-sm space-y-1 ${
-                    isDark ? "text-gray-300" : "text-gray-600"
-                  }`}>
+                  <div
+                    className={`text-sm space-y-1 ${
+                      isDark ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
                     <p>{t("mondayThursday")}</p>
                     <p>{t("fridaySaturday")}</p>
                     <p>{t("sunday")}</p>
@@ -225,9 +224,7 @@ const Contact = () => {
                 </h3>
               </div>
               <p
-                className={`mb-4 ${
-                  isDark ? "text-blue-100" : "text-blue-800"
-                }`}
+                className={`mb-4 ${isDark ? "text-blue-100" : "text-blue-800"}`}
               >
                 {t("bookTableMessage")}
               </p>
@@ -371,5 +368,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
-

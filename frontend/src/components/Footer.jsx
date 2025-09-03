@@ -1,8 +1,15 @@
-import { useLanguage } from '../contexts/LanguageContext'
-import { Facebook, Twitter, Instagram, MapPin, Phone, Mail } from 'lucide-react'
+import { useLanguage } from "../contexts/LanguageContext";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  MapPin,
+  Phone,
+  Mail,
+} from "lucide-react";
 
 const Footer = () => {
-  const { t } = useLanguage()
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-gray-900 dark:bg-gray-950 text-white transition-colors duration-300">
@@ -17,7 +24,12 @@ const Footer = () => {
               <span className="ml-2 text-xl font-bold">Oasis Tides</span>
             </div>
             <p className="text-gray-300 mb-4">
-              Experience authentic dining with fresh seafood and exquisite cuisine in a beautiful oceanside setting.
+              Experience authentic dining with fresh seafood and exquisite
+              cuisine in a beautiful oceanside setting.
+            </p>
+            <p className="text-gray-300 mb-4">
+              The Source Code is for Sale and if any amendments are required can
+              do!
             </p>
             <div className="flex space-x-4">
               <Facebook className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
@@ -28,19 +40,23 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">{t('contact')}</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("contact")}</h3>
             <div className="space-y-3">
               <div className="flex items-center">
                 <MapPin className="h-5 w-5 text-gray-400 mr-3" />
-                <span className="text-gray-300">123 Ocean Drive, Seaside City</span>
+                <span className="text-gray-300">
+                  15 Ahmed Abu Giz, Ashmoun, Menofia, Egypt
+                </span>
               </div>
               <div className="flex items-center">
                 <Phone className="h-5 w-5 text-gray-400 mr-3" />
-                <span className="text-gray-300">+1 (555) 123-4567</span>
+                <span className="text-gray-300">+2 0100 1945390</span>
               </div>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 text-gray-400 mr-3" />
-                <span className="text-gray-300">info@oasistides.com</span>
+                <span className="text-gray-300">
+                  ahsmartsolutions@gmail.com
+                </span>
               </div>
             </div>
           </div>
@@ -66,12 +82,11 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400">{t('footerText')}</p>
+          <p className="text-gray-400">{t("footerText")}</p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
-
+export default Footer;

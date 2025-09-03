@@ -5,11 +5,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { reservationAPI } from "../../lib/api";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import {
-  Plus,
-  Edit,
-  Trash2,
-} from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -50,7 +46,9 @@ const ReservationManagement = () => {
       setIsConfirmDialogOpen(false);
     },
     onError: (error) => {
-      toast.error(t("failedToDeleteReservation"), { description: error.message });
+      toast.error(t("failedToDeleteReservation"), {
+        description: error.message,
+      });
     },
   });
 
@@ -173,7 +171,9 @@ const ReservationManagement = () => {
           </thead>
           <motion.tbody
             className={`${
-              isDark ? "bg-gray-800 divide-gray-700" : "bg-white divide-gray-200"
+              isDark
+                ? "bg-gray-800 divide-gray-700"
+                : "bg-white divide-gray-200"
             }`}
             initial="hidden"
             animate="visible"
@@ -193,21 +193,21 @@ const ReservationManagement = () => {
                     isDark ? "text-white" : "text-gray-900"
                   }`}
                 >
-                  {reservation.date}
+                  {reservation.reservation_date}
                 </td>
                 <td
                   className={`px-6 py-4 whitespace-nowrap text-sm ${
                     isDark ? "text-white" : "text-gray-900"
                   }`}
                 >
-                  {reservation.time}
+                  {reservation.reservation_time}
                 </td>
                 <td
                   className={`px-6 py-4 whitespace-nowrap text-sm ${
                     isDark ? "text-white" : "text-gray-900"
                   }`}
                 >
-                  {reservation.guests}
+                  {reservation.party_size}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Badge
@@ -260,9 +260,7 @@ const ReservationManagement = () => {
         >
           <DialogHeader>
             <DialogTitle
-              className={`${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
+              className={`${isDark ? "text-white" : "text-gray-900"}`}
             >
               {selectedReservation
                 ? t("editReservation")
@@ -288,5 +286,3 @@ const ReservationManagement = () => {
 };
 
 export default ReservationManagement;
-
-

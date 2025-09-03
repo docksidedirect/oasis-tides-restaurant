@@ -6,6 +6,8 @@ import { Button } from "../components/ui/button";
 import { motion } from "framer-motion";
 import { Trash2, ShoppingCart, ArrowRight } from "lucide-react";
 
+const cartBanner = "/images/counter_bg.jpg"; // Ensure this image exists
+
 const Cart = () => {
   const { items: cart, removeFromCart, updateQuantity, clearCart } = useCart();
   const { t, language } = useLanguage();
@@ -31,35 +33,35 @@ const Cart = () => {
           : "bg-gradient-to-br from-blue-50 via-white to-gray-50 text-gray-900"
       }`}
     >
-      {/* Header */}
-      <header
-        className={`py-12 shadow-lg ${
-          isDark
-            ? "bg-gradient-to-r from-purple-800 via-indigo-800 to-blue-800"
-            : "bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600"
-        }`}
+      {/* Cart Banner - matches About/Menu, no border */}
+      <section
+        className="relative flex flex-col items-center justify-center py-10 md:py-14 mb-10"
+        style={{
+          backgroundImage: `url('${cartBanner}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          //borderRadius: "18px",
+          // border: "4px solid #861735", // Removed border for clean look
+          overflow: "hidden",
+        }}
       >
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <motion.h1
-            className="text-5xl font-extrabold bg-gradient-to-r from-white via-purple-100 to-purple-300 bg-clip-text text-transparent mb-4"
-            variants={fadeInVariants}
-            initial="hidden"
-            animate="visible"
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative z-10 w-full text-center flex flex-col items-center">
+          <h1
+            className="text-white text-4xl md:text-5xl font-extrabold mb-2"
+            style={{ textShadow: "0 2px 24px #222" }}
           >
             {t("yourCart")}
-          </motion.h1>
-          <motion.p
-            className={`text-lg md:text-xl max-w-3xl mx-auto opacity-90 ${
-              isDark ? "text-purple-200" : "text-purple-100"
-            }`}
-            variants={fadeInVariants}
-            initial="hidden"
-            animate="visible"
+          </h1>
+          <p
+            className="text-white text-xl md:text-2xl mt-1"
+            style={{ textShadow: "0 2px 12px #333" }}
           >
             {t("cartSubtitle")}
-          </motion.p>
+          </p>
         </div>
-      </header>
+      </section>
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         {cart.length === 0 ? (
@@ -73,7 +75,6 @@ const Cart = () => {
           >
             <ShoppingCart className="w-24 h-24 mx-auto mb-6 text-gray-400" />
             <h2 className="text-3xl font-bold mb-4">{t("cartEmpty")}</h2>
-            {/* <p className="text-lg mb-8">{t("cartEmptyMessage")}</p> */}{" "}
             <Link to="/menu">
               <Button
                 size="lg"
@@ -122,10 +123,19 @@ const Cart = () => {
                   >
                     <div className="flex items-center gap-4">
                       <img
-                        src={item.image}
-                        alt={language === "ar" ? item.nameAr : item.name}
+                        src={
+                          item.image
+                            ? item.image.startsWith("/storage")
+                              ? `http://localhost:8001${item.image}`
+                              : item.image.startsWith("http")
+                              ? item.image
+                              : `/images/default.jpg`
+                            : `/images/default.jpg`
+                        }
+                        alt={item.name}
                         className="w-20 h-20 object-cover rounded-lg shadow-md"
                       />
+
                       <div>
                         <h3
                           className={`text-lg font-semibold ${
